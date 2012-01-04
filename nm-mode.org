@@ -1,0 +1,33 @@
+* Core features
+
+** DONE Interactive selection of file
+   CLOSED: [2012-01-02 lun. 11:40]
+
+** DONE Shortcut to Info manual
+   CLOSED: [2012-01-02 lun. 14:05]
+
+** DONE Follow link
+   CLOSED: [2012-01-02 lun. 18:06]
+
+** DONE Toggle demangling of symbol names
+   CLOSED: [2012-01-02 lun. 16:39]
+
+Is it useful to have a shortcut for this command? 
+
+** Tool tips on types
+
+Better read the documentation
+
+** TODO Toggle display of file names
+
+* Integration
+
+** TODO Update provides, requires
+
+** TODO Add header
+
+** TODO Write documentation
+
+** TODO Check customization
+
+** TODO Use with compilation mode
