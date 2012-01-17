@@ -56,6 +56,9 @@
 (defun list-symbols (file)
   "Display the list of symbols in FILE.
 
+Set `nm-demangle-names' to t to decode low-level symbol names to
+user-level names.
+
 The return is always nil."
   (interactive "fFile name: ")
   (setq buffer (get-buffer-create "*Symbol List*"))
