@@ -20,6 +20,8 @@ Better read the documentation
 
 ** TODO Toggle display of file names
 
+** TODO Switch value column width according to 64 or 32 bits
+
 * Integration
 
 ** TODO Update provides, requires

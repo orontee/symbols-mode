@@ -53,11 +53,11 @@ The return is always nil."
 					; try to find a filename and
 					; line number
 				(if nm-demangle-names "C"))))
-	      (call-process "nm" nil (current-buffer) nil args file)
+	      (call-process "nm" nil (current-buffer) nil args (expand-file-name file))
 	      (goto-char (point-min))
 	      (while
 		  (re-search-forward
-		   "\\(\[0-9ef \]+\\) \\(\[AbBCDdGgiNpRrSsTtUuVvWw-?\]\\) \\(.*\\)" nil t)
+		   "\\(\[0-9a-f \]+\\) \\(\[AbBCDdGgiNpRrSsTtUuVvWw-?\]\\) \\(.*\\)" nil t)
 		(let* ((value (match-string 1))
 		       (type (match-string 2))
 		       (others (match-string 3))
