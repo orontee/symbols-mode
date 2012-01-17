@@ -33,12 +33,18 @@
   :type 'boolean
   :group 'nm)
 
+(defcustom nm-undefined-symbols-only nil
+  "Non-nil means display only undefined symbols."
+  :type 'boolean
+  :group 'nm)
+
 (defvar nm-object-file nil)
 
 (defvar nm-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "i" 'nm-display-manual)
     (define-key map "t" 'nm-toggle-demangling)
+    (define-key map "u" 'nm-toggle-undefined-only)
     map)
   "Keymap used for programming modes.")
 
@@ -78,10 +84,9 @@ The return is always nil."
 	    (entries nil))
 	(progn
 	  (with-temp-buffer
-	    (let ((args (concat "-l"	; Use debugging information to
-					; try to find a filename and
-					; line number
-				(if nm-demangle-names "C"))))
+	    (let ((args (concat "-l"
+				(if nm-demangle-names "C")
+				(if nm-undefined-symbols-only "u"))))
 	      (call-process "nm" nil (current-buffer) nil args (expand-file-name file))
 	      (goto-char (point-min))
 	      (while
@@ -142,6 +147,13 @@ The return is always nil."
 user-level names."
   (interactive)
   (setq nm-demangle-names (not nm-demangle-names))
+  (nm-list-symbols--refresh)
+  (tabulated-list-print))
+
+(defun nm-toggle-undefined-only ()
+  "Toggle whether to display only undefined symbols or not."
+  (interactive)
+  (setq nm-undefined-symbols-only (not nm-undefined-symbols-only))
   (nm-list-symbols--refresh)
   (tabulated-list-print))
 
