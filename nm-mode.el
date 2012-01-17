@@ -1,3 +1,29 @@
+;;; nm-mode.el --- List symbols of object files
+
+;; Copyright (C) 2012  Matthias Meulien
+
+;; Author: Matthias Meulien <orontee@gmail.com>
+;; Keywords: tools, data
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; See `list-symbols' docstring for usage information.
+
+;;; Code:
+
 (defgroup nm nil
   "List symbols from object files."
   :group 'tools)
@@ -18,7 +44,7 @@
 
 (define-derived-mode nm-mode tabulated-list-mode "Symbols"
   "Major mode for listing the symbols from an object file."
-  (setq tabulated-list-format [("Value" 8 t)
+  (setq tabulated-list-format [("Value" 16 t)
 			       ("T" 1 t)
 			       ("Name" 60 t)
 			       ("File" 0 t)])
@@ -116,3 +142,7 @@ user-level names."
   (nm-list-symbols--refresh)
   (tabulated-list-print))
 
+(provide 'list-symbols)
+(provide 'nm-mode)
+
+;;; nm-mode.el ends here

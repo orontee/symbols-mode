@@ -12,7 +12,8 @@
 ** DONE Toggle demangling of symbol names
    CLOSED: [2012-01-02 lun. 16:39]
 
-Is it useful to have a shortcut for this command? 
+Is it useful to have a shortcut for this command? What about
+demangling styles?
 
 ** Tool tips on types
 
@@ -22,14 +23,22 @@ Better read the documentation
 
 ** TODO Switch value column width according to 64 or 32 bits
 
+** TODO Filter
+
+Key u for undefined symbols only (toggle)
+Key d for defined symbols only (toggle)
+
 * Integration
 
-** TODO Update provides, requires
+** DONE Update provides, requires
+   CLOSED: [2012-01-17 mar. 22:18]
 
-** TODO Add header
+** DONE Add header
+   CLOSED: [2012-01-17 mar. 22:18]
 
 ** TODO Write documentation
 
-** TODO Check customization
+** DONE Check customization
+   CLOSED: [2012-01-17 mar. 22:20]
 
 ** TODO Use with compilation mode
