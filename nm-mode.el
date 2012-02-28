@@ -4,6 +4,7 @@
 
 ;; Author: Matthias Meulien <orontee@gmail.com>
 ;; Keywords: tools, data
+;; Version: 0.1
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -59,6 +60,7 @@
   (add-hook 'tabulated-list-revert-hook 'nm-list-symbols--refresh nil t)
   (tabulated-list-init-header))
 
+;;;###autoload
 (defun list-symbols (file)
   "Display the list of symbols in FILE.
 
