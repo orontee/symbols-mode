@@ -23,10 +23,14 @@ Better read the documentation
 
 ** TODO Switch value column width according to 64 or 32 bits
 
-** TODO Filter
+** DONE Display undefined symbols only
+   CLOSED: [2012-01-17 mar. 22:57]
 
-Key u for undefined symbols only (toggle)
-Key d for defined symbols only (toggle)
+Key u to toggle feature
+
+What about the d key for defined symbols only?
+
+** TODO Add menu bar
 
 * Integration
 
