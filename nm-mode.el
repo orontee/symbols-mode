@@ -30,6 +30,13 @@
   :group 'tools
   :version "24.0")
 
+(defun nm-set-and-refresh (symbol value)
+  (set-default symbol value)
+  (condition-case nil
+      (with-current-buffer nm-buffer-name
+	(revert-buffer))
+    (error nil)))
+
 (defcustom nm-values-type 16
   "Symbol values are printed on 16 or 8 columns depending on the
 the type of the targeted os, 64 bits or 32 bits os."
@@ -57,13 +64,6 @@ the type of the targeted os, 64 bits or 32 bits os."
   :type 'boolean
   :set 'nm-set-and-refresh
   :group 'nm)
-
-(defun nm-set-and-refresh (symbol value)
-  (set-default symbol value)
-  (condition-case nil
-      (with-current-buffer nm-buffer-name
-	(revert-buffer))
-    (error nil)))
 
 (defvar nm-object-file nil)
 
