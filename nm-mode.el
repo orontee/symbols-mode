@@ -37,12 +37,19 @@
 	(revert-buffer))
     (error nil)))
 
+(defun nm-set-and-list (symbol value)
+  (set-default symbol value)
+  (condition-case nil
+      (with-current-buffer nm-buffer-name
+	(list-symbols nm-object-file))
+    (error nil)))
+
 (defcustom nm-values-type 16
   "Symbol values are printed on 16 or 8 columns depending on the
 the type of the targeted os, 64 bits or 32 bits os."
   :type '(radio (const :tag "64 bits" 16)
 		(const :tag "32 bits" 8))
-  :set 'nm-set-and-refresh
+  :set 'nm-set-and-list
   :group 'nm)
 
 (defcustom nm-values-radix "x"
