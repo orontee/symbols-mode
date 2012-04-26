@@ -27,19 +27,47 @@
 
 (defgroup nm nil
   "List symbols from object files."
-  :group 'tools)
+  :group 'tools
+  :version "24.0")
+
+(defcustom nm-values-type 16
+  "Symbol values are printed on 16 or 8 columns depending on the
+the type of the targeted os, 64 bits or 32 bits os."
+  :type '(radio (const :tag "64 bits" 16)
+		(const :tag "32 bits" 8))
+  :set 'nm-set-and-refresh
+  :group 'nm)
+
+(defcustom nm-values-radix "x"
+  "Radix to use for printing the symbol values."
+  :type '(radio (const :tag "Decimal" "d")
+		(const :tag "Octal" "o")
+		(const :tag "Hexadecimal" "x"))
+  :set 'nm-set-and-refresh
+  :group 'nm)
 
 (defcustom nm-demangle-names t
   "Non-nil means decode low-level symbol names into user-level names."
   :type 'boolean
+  :set 'nm-set-and-refresh
   :group 'nm)
 
 (defcustom nm-undefined-symbols-only nil
   "Non-nil means display only undefined symbols."
   :type 'boolean
+  :set 'nm-set-and-refresh
   :group 'nm)
 
+(defun nm-set-and-refresh (symbol value)
+  (set-default symbol value)
+  (condition-case nil
+      (with-current-buffer nm-buffer-name
+	(revert-buffer))
+    (error nil)))
+
 (defvar nm-object-file nil)
+
+(defvar nm-buffer-name "*Symbol List*")
 
 (defvar nm-mode-map
   (let ((map (make-sparse-keymap)))
@@ -51,10 +79,11 @@
 
 (define-derived-mode nm-mode tabulated-list-mode "Symbols"
   "Major mode for listing the symbols from an object file."
-  (setq tabulated-list-format [("Value" 16 t)
-			       ("T" 1 t)
-			       ("Name" 60 t)
-			       ("File" 0 t)])
+  (setq tabulated-list-format
+	`[("Value" ,nm-values-type t)
+	 ("T" 1 t)
+	 ("Name" 60 t)
+	 ("File" 0 t)])
   (make-local-variable 'nm-object-file)
   (setq tabulated-list-sort-key (cons "Name" nil))
   (add-hook 'tabulated-list-revert-hook 'nm-list-symbols--refresh nil t)
@@ -69,7 +98,7 @@ user-level names.
 
 The return is always nil."
   (interactive "fFile name: ")
-  (setq buffer (get-buffer-create "*Symbol List*"))
+  (setq buffer (get-buffer-create nm-buffer-name))
   (with-current-buffer buffer
     (nm-mode)
     (setq nm-object-file file)
@@ -88,7 +117,8 @@ The return is always nil."
 	  (with-temp-buffer
 	    (let ((args (concat "-l"
 				(if nm-demangle-names "C")
-				(if nm-undefined-symbols-only "u"))))
+				(if nm-undefined-symbols-only "u")
+				"t" nm-values-radix)))
 	      (call-process "nm" nil (current-buffer) nil args (expand-file-name file))
 	      (goto-char (point-min))
 	      (while
@@ -115,7 +145,7 @@ The return is always nil."
 			entries)))))
 	  (setq tabulated-list-entries entries)))
     (message "No object file associated to buffer")))
-  
+
 (defun nm-find-file (button)
   (let ((line (button-get button 'line))
 	(buff (find-file (button-get button 'file))))
