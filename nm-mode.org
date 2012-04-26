@@ -58,3 +58,6 @@ What about the =d= key for defined symbols only?
 * Bugs									:bug:
 
 ** TODO Missing links
+
+Not really a bug: file existence is checked relatively to current
+directory...
