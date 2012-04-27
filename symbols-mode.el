@@ -4,7 +4,7 @@
 
 ;; Author: Matthias Meulien <orontee@gmail.com>
 ;; Keywords: tools, data
-;; Version: 0.1
+;; Version: 0.2
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -22,6 +22,15 @@
 ;;; Commentary:
 
 ;; See `list-symbols' docstring for usage information.
+
+;; Todos/Ideas:
+
+;; - Add argument to `list-symbols' to edit nm command
+;; - Tool tips in type column
+;; - Command to toggle display of file names
+;; - Check existence of file (default to a.out)
+;; - Check that nm is in path
+;; - Integration to `compilation-mode'
 
 ;;; Code:
 
@@ -85,7 +94,9 @@ the type of the targeted os, 64 bits or 32 bits os."
   "Keymap used for programming modes.")
 
 (define-derived-mode symbols-mode tabulated-list-mode "Symbols"
-  "Major mode for listing the symbols from an object file."
+  "Major mode for listing the symbols from an object file.
+
+The list of symbols is obtained from the nm tool."
   (setq tabulated-list-format
 	`[("Value" ,symbols-values-type t)
 	 ("T" 1 t)
@@ -99,9 +110,6 @@ the type of the targeted os, 64 bits or 32 bits os."
 ;;;###autoload
 (defun list-symbols (file)
   "Display the list of symbols in FILE.
-
-Set `symbols-demangle-names' to t to decode low-level symbol names to
-user-level names.
 
 The return is always nil."
   (interactive "fFile name: ")
