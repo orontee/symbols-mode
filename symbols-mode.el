@@ -1,4 +1,4 @@
-;;; nm-mode.el --- List symbols of object files
+;;; symbols-mode.el --- List symbols of object files
 
 ;; Copyright (C) 2012  Matthias Meulien
 
@@ -25,107 +25,107 @@
 
 ;;; Code:
 
-(defgroup nm nil
+(defgroup symbols nil
   "List symbols from object files."
   :group 'tools
   :version "24.0")
 
-(defun nm-set-and-refresh (symbol value)
+(defun symbols-set-and-refresh (symbol value)
   (set-default symbol value)
   (condition-case nil
-      (with-current-buffer nm-buffer-name
+      (with-current-buffer symbols-buffer-name
 	(revert-buffer))
     (error nil)))
 
-(defun nm-set-and-list (symbol value)
+(defun symbols-set-and-list (symbol value)
   (set-default symbol value)
   (condition-case nil
-      (with-current-buffer nm-buffer-name
-	(list-symbols nm-object-file))
+      (with-current-buffer symbols-buffer-name
+	(list-symbols symbols-object-file))
     (error nil)))
 
-(defcustom nm-values-type 16
+(defcustom symbols-values-type 16
   "Symbol values are printed on 16 or 8 columns depending on the
 the type of the targeted os, 64 bits or 32 bits os."
   :type '(radio (const :tag "64 bits" 16)
 		(const :tag "32 bits" 8))
-  :set 'nm-set-and-list
-  :group 'nm)
+  :set 'symbols-set-and-list
+  :group 'symbols)
 
-(defcustom nm-values-radix "x"
+(defcustom symbols-values-radix "x"
   "Radix to use for printing the symbol values."
   :type '(radio (const :tag "Decimal" "d")
 		(const :tag "Octal" "o")
 		(const :tag "Hexadecimal" "x"))
-  :set 'nm-set-and-refresh
-  :group 'nm)
+  :set 'symbols-set-and-refresh
+  :group 'symbols)
 
-(defcustom nm-demangle-names t
+(defcustom symbols-demangle-names t
   "Non-nil means decode low-level symbol names into user-level names."
   :type 'boolean
-  :set 'nm-set-and-refresh
-  :group 'nm)
+  :set 'symbols-set-and-refresh
+  :group 'symbols)
 
-(defcustom nm-undefined-symbols-only nil
+(defcustom symbols-undefined-symbols-only nil
   "Non-nil means display only undefined symbols."
   :type 'boolean
-  :set 'nm-set-and-refresh
-  :group 'nm)
+  :set 'symbols-set-and-refresh
+  :group 'symbols)
 
-(defvar nm-object-file nil)
+(defvar symbols-object-file nil)
 
-(defvar nm-buffer-name "*Symbol List*")
+(defvar symbols-buffer-name "*Symbol List*")
 
-(defvar nm-mode-map
+(defvar symbols-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "i" 'nm-display-manual)
-    (define-key map "t" 'nm-toggle-demangling)
-    (define-key map "u" 'nm-toggle-undefined-only)
+    (define-key map "i" 'symbols-display-manual)
+    (define-key map "t" 'symbols-toggle-demangling)
+    (define-key map "u" 'symbols-toggle-undefined-only)
     map)
   "Keymap used for programming modes.")
 
-(define-derived-mode nm-mode tabulated-list-mode "Symbols"
+(define-derived-mode symbols-mode tabulated-list-mode "Symbols"
   "Major mode for listing the symbols from an object file."
   (setq tabulated-list-format
-	`[("Value" ,nm-values-type t)
+	`[("Value" ,symbols-values-type t)
 	 ("T" 1 t)
 	 ("Name" 60 t)
 	 ("File" 0 t)])
-  (make-local-variable 'nm-object-file)
+  (make-local-variable 'symbols-object-file)
   (setq tabulated-list-sort-key (cons "Name" nil))
-  (add-hook 'tabulated-list-revert-hook 'nm-list-symbols--refresh nil t)
+  (add-hook 'tabulated-list-revert-hook 'symbols-list-symbols--refresh nil t)
   (tabulated-list-init-header))
 
 ;;;###autoload
 (defun list-symbols (file)
   "Display the list of symbols in FILE.
 
-Set `nm-demangle-names' to t to decode low-level symbol names to
+Set `symbols-demangle-names' to t to decode low-level symbol names to
 user-level names.
 
 The return is always nil."
   (interactive "fFile name: ")
-  (setq buffer (get-buffer-create nm-buffer-name))
+  (setq buffer (get-buffer-create symbols-buffer-name))
   (with-current-buffer buffer
-    (nm-mode)
-    (setq nm-object-file file)
-    (nm-list-symbols--refresh)
+    (symbols-mode)
+    (setq symbols-object-file file)
+    (symbols-list-symbols--refresh)
     (tabulated-list-print))
   (display-buffer buffer)
   nil)
 
-(defun nm-list-symbols--refresh ()
-  "Recompute the list of symbols from `nm-object-file'."
+(defun symbols-list-symbols--refresh ()
+  "Recompute the list of symbols from `symbols-object-file'."
   (setq tabulated-list-entries nil)
-  (if nm-object-file
-      (let ((file nm-object-file)
+  (if symbols-object-file
+      (let ((file symbols-object-file)
 	    (entries nil))
 	(progn
 	  (with-temp-buffer
 	    (let ((args (concat "-l"
-				(if nm-demangle-names "C")
-				(if nm-undefined-symbols-only "u")
-				"t" nm-values-radix)))
+				(if symbols-demangle-names "C")
+				(if symbols-undefined-symbols-only "u")
+				"t" symbols-values-radix)))
 	      (call-process "nm" nil (current-buffer) nil args (expand-file-name file))
 	      (goto-char (point-min))
 	      (while
@@ -146,14 +146,14 @@ The return is always nil."
 			      follow-link t
 			      file ,file
 			      line ,(string-to-number line)
-			      action nm-find-file)
+			      action symbols-find-file)
 			  name)))
 		  (push (list (line-number-at-pos) (vector value type label location))
 			entries)))))
 	  (setq tabulated-list-entries entries)))
     (message "No object file associated to buffer")))
 
-(defun nm-find-file (button)
+(defun symbols-find-file (button)
   (let ((line (button-get button 'line))
 	(buff (find-file (button-get button 'file))))
     (when (numberp line)
@@ -161,8 +161,9 @@ The return is always nil."
 	(goto-char (point-min)) (forward-line (1- line))))))
 
 (require 'info)
-(defun nm-display-manual ()
-  "Go to Info buffer that displays nm manual, creating it if none already exists."
+(defun symbols-display-manual ()
+  "Go to Info buffer that displays nm manual, creating it if none
+already exists."
   (interactive)
   (let ((blist (buffer-list))
 	(manual-re (concat "\\(/\\|\\`\\)" "binutils" "\\(\\.\\|\\'\\)"))
@@ -181,22 +182,22 @@ The return is always nil."
       (info (Info-find-file "binutils")))
     (Info-goto-node "(binutils)nm")))
 
-(defun nm-toggle-demangling ()
+(defun symbols-toggle-demangling ()
   "Toggle whether to decode low-level symbol names into
 user-level names."
   (interactive)
-  (setq nm-demangle-names (not nm-demangle-names))
-  (nm-list-symbols--refresh)
+  (setq symbols-demangle-names (not symbols-demangle-names))
+  (symbols-list-symbols--refresh)
   (tabulated-list-print))
 
-(defun nm-toggle-undefined-only ()
+(defun symbols-toggle-undefined-only ()
   "Toggle whether to display only undefined symbols or not."
   (interactive)
-  (setq nm-undefined-symbols-only (not nm-undefined-symbols-only))
-  (nm-list-symbols--refresh)
+  (setq symbols-undefined-symbols-only (not symbols-undefined-symbols-only))
+  (symbols-list-symbols--refresh)
   (tabulated-list-print))
 
 (provide 'list-symbols)
-(provide 'nm-mode)
+(provide 'symbols-mode)
 
-;;; nm-mode.el ends here
+;;; symbols-mode.el ends here
