@@ -4,7 +4,8 @@
 
 ;; Author: Matthias Meulien <orontee@gmail.com>
 ;; Keywords: tools, data
-;; Version: 0.2
+;; URL: https://gitorious.org/symbols-mode-el
+;; Version: 0.3
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,10 +27,15 @@
 ;; Todos/Ideas:
 
 ;; - Add argument to `list-symbols' to edit nm command
+;; 
 ;; - Tool tips in type column
+;; 
 ;; - Command to toggle display of file names
+;; 
 ;; - Check existence of file (default to a.out)
+;;
 ;; - Check that nm is in path
+;; 
 ;; - Integration to `compilation-mode'
 
 ;;; Code:
@@ -38,6 +44,10 @@
   "List symbols from object files."
   :group 'tools
   :version "24.0")
+
+(defvar symbols-object-file nil)
+
+(defvar symbols-buffer-name "*Symbol List*")
 
 (defun symbols-set-and-refresh (symbol value)
   (set-default symbol value)
@@ -53,6 +63,7 @@
 	(list-symbols symbols-object-file))
     (error nil)))
 
+;;;###autoload
 (defcustom symbols-values-type 16
   "Symbol values are printed on 16 or 8 columns depending on the
 the type of the targeted os, 64 bits or 32 bits os."
@@ -61,6 +72,7 @@ the type of the targeted os, 64 bits or 32 bits os."
   :set 'symbols-set-and-list
   :group 'symbols)
 
+;;;###autoload
 (defcustom symbols-values-radix "x"
   "Radix to use for printing the symbol values."
   :type '(radio (const :tag "Decimal" "d")
@@ -69,21 +81,19 @@ the type of the targeted os, 64 bits or 32 bits os."
   :set 'symbols-set-and-refresh
   :group 'symbols)
 
+;;;###autoload
 (defcustom symbols-demangle-names t
   "Non-nil means decode low-level symbol names into user-level names."
   :type 'boolean
   :set 'symbols-set-and-refresh
   :group 'symbols)
 
+;;;###autoload
 (defcustom symbols-undefined-symbols-only nil
   "Non-nil means display only undefined symbols."
   :type 'boolean
   :set 'symbols-set-and-refresh
   :group 'symbols)
-
-(defvar symbols-object-file nil)
-
-(defvar symbols-buffer-name "*Symbol List*")
 
 (defvar symbols-mode-map
   (let ((map (make-sparse-keymap)))
