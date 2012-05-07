@@ -40,6 +40,8 @@
 
 ;;; Code:
 
+(require 'custom)
+
 (defgroup symbols nil
   "List symbols from object files."
   :group 'tools
@@ -63,7 +65,6 @@
 	(list-symbols symbols-object-file))
     (error nil)))
 
-;;;###autoload
 (defcustom symbols-values-type 16
   "Symbol values are printed on 16 or 8 columns depending on the
 the type of the targeted os, 64 bits or 32 bits os."
@@ -72,7 +73,6 @@ the type of the targeted os, 64 bits or 32 bits os."
   :set 'symbols-set-and-list
   :group 'symbols)
 
-;;;###autoload
 (defcustom symbols-values-radix "x"
   "Radix to use for printing the symbol values."
   :type '(radio (const :tag "Decimal" "d")
@@ -81,14 +81,12 @@ the type of the targeted os, 64 bits or 32 bits os."
   :set 'symbols-set-and-refresh
   :group 'symbols)
 
-;;;###autoload
 (defcustom symbols-demangle-names t
   "Non-nil means decode low-level symbol names into user-level names."
   :type 'boolean
   :set 'symbols-set-and-refresh
   :group 'symbols)
 
-;;;###autoload
 (defcustom symbols-undefined-symbols-only nil
   "Non-nil means display only undefined symbols."
   :type 'boolean
@@ -103,6 +101,7 @@ the type of the targeted os, 64 bits or 32 bits os."
     map)
   "Keymap used for programming modes.")
 
+;;;###autoload
 (define-derived-mode symbols-mode tabulated-list-mode "Symbols"
   "Major mode for listing the symbols from an object file.
 
