@@ -34,8 +34,6 @@
 ;; 
 ;; - Check existence of file (default to a.out)
 ;;
-;; - Check that nm is in path
-;; 
 ;; - Integration to `compilation-mode'
 
 ;;; Code:
