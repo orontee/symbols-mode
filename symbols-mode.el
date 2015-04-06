@@ -4,7 +4,7 @@
 
 ;; Author: Matthias Meulien <orontee@gmail.com>
 ;; Keywords: tools, data
-;; URL: https://gitorious.org/symbols-mode-el
+;; URL: https://github.com/orontee/symbols-mode
 ;; Version: 0.3
 
 ;; This program is free software; you can redistribute it and/or modify
